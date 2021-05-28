@@ -1,0 +1,26 @@
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# Caches
+empsureApp/__pycache__/*
+empsureApp/migrations/__pycache__/*
+empsureProj/__pycache__/*
+empsureApp/templatetags/__pycache__/*
+
+# Media
+media/*
+
+# Others
+requirements0.txt
+db.sqlite3
+../empsure
+../empsure.pub
+file.py
+act.bat
+
+#####
+empsureProj/hidden*.*
+hidden*.*

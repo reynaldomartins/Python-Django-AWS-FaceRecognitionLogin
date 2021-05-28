@@ -1,0 +1,14 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+
+{% block body_block %}
+
+<div class="container">
+  <span class="icon-warning"><span class="glyphicon glyphicon-exclamation-sign"></span></span>
+  <span class="strong-enhance-bold"><h3>{{ message }}</h3></span>
+  <br>
+  <a href="{% url 'empsureApp:loginURLName' %}"><button type="button" class="btn btn-primary" name="button">New Login</button></a>
+</div>
+
+{% endblock %}

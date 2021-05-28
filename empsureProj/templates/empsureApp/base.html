@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+{# {% load staticfiles %} #}
+{% load static %}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Load bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+
+    <!-- DropMenu to work needs this scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Load JQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{% static 'styles/master.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/normalize.css' %}">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Charm" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{% static 'images/empsure.png' %}" />
+    <title>Employee Sure</title>
+
+  </head>
+
+  <body>
+
+    <!-- <div class="container"> -->
+        <nav class="navbar navbar-default navbar-fixed-top sc-navbar">
+              <div class="navbar-header sc-navbar">
+                <img class="logo-on-nav navbar-brand" width="40" src="{% static 'images/empsure.png' %}"/>
+
+                <!-- The code bellow is used to present a hamburger icon in case the navbar collapses -->
+                <!-- it is inside navbar header area-->
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                          <!--  Code for the hamburger icon wiht 3 lines-->
+                          <span class="sr-only">Toggle navigation</span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                        </button>
+                <!-- end of the code collapse+hamburger icon -->
+
+              </div>
+
+              <!-- Anything inside of collapse navbar-collapse goes into the "hamburger" -->
+              <!-- if a list of itens goes outside the div collapse it will no collapse into the hamburger -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav sc-navbar">
+                    <li role="presentation" class="dropdown">
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            Employee Data<span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a href="{% url 'empsureApp:personalURLName' %}" id="personal-option">Personal</a></li>
+                            <li><a href="{% url 'empsureApp:professionalURLName' %}" id="professional-option">Professsional</a></li>
+                            <li><a href="{% url 'empsureApp:imagesURLName' %}" id="images-option">Images</a></li>
+                            <li><a href="{% url 'empsureApp:captureURLName' %}" id="capture-option">Capture Faces</a></li>
+                          </ul>
+                    </li>
+                    <li role="presentation" class="dropdown">
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            History Data<span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a href="{% url 'empsureApp:payrollURLName' %}" id="payroll-option">Payroll</a></li>
+                            <li><a href="{% url 'empsureApp:bonusURLName' %}" id="bonus-option">Bonus</a></li>
+                            <li><a href="{% url 'empsureApp:vacationsURLName' %}" id="vacation-option">Vacation</a></li>
+                          </ul>
+                    </li>
+                    <li> <a href="{% url 'empsureApp:documentsURLName' %}">Documents</a></li>
+                    <li> <a href="{% url 'empsureApp:auditURLName' %}">Sign in Audit</a></li>
+                  </ul>
+                  {% if user.is_authenticated %}
+                    <ul class="nav navbar-nav navbar-right sc-navbar">
+                        <li><a href="{% url 'logout' %}">Sign Out</a></li>
+                    </ul>
+                  {% endif %}
+              </div>
+          </nav>
+      <!-- </div> -->
+
+      <div class="row main-row">
+          <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12 employee-box-column">
+            <div class="employee-summary jumbotron table-responsive" >
+              <div class="card">
+                {% if user.is_authenticated %}
+                  <div class="card-body">
+                    <h5 class="card-title">Logged User</h5>
+                    <h4 class="card-title">User Name : {{ loggedUser.username }}</h4>
+                    <h4 class="card-title">{{ loggedUser.firstname }} {{ loggedUser.lastname }}</h4>
+                  </div>
+                {% else %}
+                  <div class="card-body">
+                    <h5 class="card-title">No User Signed In</h5>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% if user.is_authenticated %}
+            <div class="employee-summary jumbotron table-responsive" >
+                <div class="card">
+                  <img class="img-rounded" width="150" height="135"src="{{ subjectEmployeeImage.image.url }}" alt="No employee image"/>
+                  <div class="card-body">
+                    <br>
+                    <h5 class="card-title">Subject Employee</h5>
+                    <h4 class="card-title">{{ subjectEmployee.firstname }} {{ subjectEmployee.lastname }}</h4>
+                    <br>
+                    <h5 class="card-text">Employee since {{ subjectEmployee.contractinitialdate }}</h5>
+                    <br>
+                    {% if isHR %}
+                      <a class="btn btn-primary" href="{% url 'empsureApp:changeEmployeeURLName' %}">Change Employee</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+        {% endif %}
+        </div>
+        <div class="col-lg-10 col-md-8 col-sm-8 col-xs-12 boxy pull-right main-area"
+                    style="transform: translateX(-5%) translateY(-5%) scale(0.9, 0.9);">
+          {% block body_block %}
+              <!-- everyhting outside this block will be inherited -->
+          {% endblock %}
+        </div>
+      </div>
+
+    <script src="{% static 'JS/master.js' %}" charset="utf-8"></script>
+
+  </body>
+</html>

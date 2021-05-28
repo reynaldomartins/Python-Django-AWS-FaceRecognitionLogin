@@ -1,0 +1,126 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+{% load tags %}
+{% load widget_tweaks %}
+
+{% block body_block %}
+
+  <div class="modal in" id="modal-delete-doc" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Document</h4>
+        </div>
+        <div class="modal-body">
+          <p id="alert-doc-delete"></p>
+          <br>
+          <div class="row">
+              <div class="col-12-xs text-center">
+                <form class="" action="{% url 'empsureApp:documentsURLName' %}" method="post">
+                    {% csrf_token %}
+                  <button type="button" class="btn btn btn-md" id="cancel-delete-doc" name="cancel-delete-doc" >Cancel</button>
+                  <input type="hidden" id="doc-tobe-deleted" name="doc-tobe-deleted">
+                  <input type="submit" class="btn btn-warning" name="delete-doc" value="Delete Document"></input>
+                </form>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container ">
+
+    <div class="div-form">
+
+    <form class="" action="{% url 'empsureApp:documentsURLName' %}?emp={{employee.idemployee}}" method="POST" enctype="multipart/form-data">
+      <h3>Upload a Document</h3>
+      <br>
+      {% csrf_token %}
+
+        <div class="row">
+
+          <div class="col-lg-6 col-sm-6 boxy">
+              <div class="fieldWrapper">
+                  <label class="field-label" for="{{ document_form.title.id_for_label }}">Title</label>
+                  {{ document_form.title | add_class:'field-box field-box-extra-large'}}
+              </div>
+
+              <div class="fieldWrapper">
+                  <label class="field-label" for="{{ document_form.documenttype.id_for_label }}">Document Type</label>
+                  {{ document_form.documenttype | add_class:'field-box'}}
+              </div>
+
+              <div class="div-pic-input">
+                  <label class="field-label top-label" for="{{ document_form.document.id_for_label }}">Upload Document</label>
+                  {{ document_form.document }}&nbsp;&nbsp;
+              </div>
+          </div>
+          <div class="col-lg-6 col-sm-6 boxy">
+            <div class="fieldWrapper">
+                <label class="field-label top-label" for="{{ document_form.comment.id_for_label }}">Comments</label>
+                {{ document_form.comment | add_class:'textarea-box' }}&nbsp;&nbsp;
+            </div>
+            {% if document_form.errors %}
+              <br>
+              <span class="form-error">
+                {{ document_form.non_field_errors | striptags }}
+                {{ document_form.title.errors | striptags }}
+                {{ document_form.documenttype.errors | striptags }}
+                {{ document_form.document.errors | striptags }}
+                {{ document_form.comment.errors | striptags }}
+              </span>
+              <br>
+            {% endif %}
+          </div>
+        </div>
+      <br>
+      <button type="button" class="cancel-button btn btn"
+            data-href="{% url 'empsureApp:documentsURLName' %}?emp={{employee.idemployee}}" >Cancel</button>
+      <input type="submit" class="btn btn-primary" name="upload-doc" value="Upload File"></input>
+    </form>
+  </div>
+
+  <br>
+  <div class="container">
+       <div class="div-list-info table-responsive">
+         <br>
+         <h3>Documents - Employee : {{ subjectEmployee.firstname }} {{ subjectEmployee.lastname }}</h3>
+         <br>
+          <table class="hoverTable">
+              <thead>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Document</ht>
+                <th>Date/Time Upload</th>
+                <th></th>
+                <th></th>
+              </thead>
+               <tbody class="hoverTableBody">
+                 {% for doc in documentList %}
+                  <tr class="collapsable-table-row">
+                    <td class='not-last-td'>{{ doc.title }}</td>
+                    <td class='not-last-td'>{{ doc.documenttype.type }}</td>
+                    <td class='not-last-td'>
+                              <a href="{{ doc.document.url }}" download class="download-doc">{% getfilename doc.document.name %}</a></td>
+                    <td class='last-td'>{{ doc.date_time }}</td>
+                    <td class='not-visible' id="doc-ref">{{doc.iddocument}}</td>
+                    <td>
+                      <span class="glyphicon glyphicon-trash delete-doc-icon" id="delete-doc-icon" aria-hidden="true"></span>
+                    </td>
+                    <td>
+                      <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                    </td>
+                  </tr>
+                  <tr class="collapsed-table-row">
+                    <td colspan="5" class='last-td'>Comment: {{ doc.comment }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

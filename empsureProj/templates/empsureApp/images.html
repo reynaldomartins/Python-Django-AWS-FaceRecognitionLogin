@@ -1,0 +1,29 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+
+{% block body_block %}
+
+<div class="container div-form">
+<div class="container image-area">
+  <h3>Images - Employee : {{ subjectEmployee.firstname }} {{ subjectEmployee.lastname }}</h3>
+  <br>
+
+  <h4>Default Image</h4>
+  <br>
+  <div class="row">
+    <img class="img-rounded" width="200" height="180"src="{{ subjectEmployeeImage.image.url }}" alt="No image"/>
+  </div>
+  <br>
+
+  <h4>Other Baseline Images used for Training Face Recognition</h4>
+  <br>
+  <div class="row">
+    {% for image in lstNonDefaultImages %}
+       <img class="img-rounded" width="200" height="180"src="{{ image.image.url }}" alt="No image"/>
+    {% endfor %}
+  </div>
+</div>
+</div>
+
+{% endblock %}

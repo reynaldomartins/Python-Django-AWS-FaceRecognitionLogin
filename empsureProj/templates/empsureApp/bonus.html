@@ -1,0 +1,65 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+{% load tags %}
+
+{% block body_block %}
+
+<div class="container">
+     {% define 0 as year_prev %}
+     <h3>Bonus History - Employee : {{ subjectEmployee.firstname }} {{ subjectEmployee.lastname }}</h3>
+     <br>
+     <div class="div-list-info table-responsive">
+        {% for bonus in listBonus %}
+            {% define bonus.bonusdate.year as year %}
+            {% if year != year_prev %}
+                {% if year_prev != 0 %}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </td>
+                          </tr>
+                        </div>
+                      </tbody>
+                    </table>
+                {% endif %}
+                <table class="hoverTable">
+                  <tbody class="hoverTableBody">
+                    <tr class="collapsable-table-row">
+                      <td width="300" style="text-decoration: underline;">
+                        Bonus during the year :
+                        <span class="strong-enhance">{{ year }}</span>
+                      </td>
+                      <td>
+                        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                      </td>
+                    </tr>
+                  <div>
+                  <tr class="collapsed-table-row">
+                    <td>
+                     <div class="collapsed-table-div">
+                       <table>
+                         <thead>
+                           <th>Bonus Date</th>
+                           <th>Bonus Value</th>
+                         </thead>
+                         <tbody>
+              {% endif %}
+                              <tr>
+                                <td class='not-last-td'>{{ bonus.bonusdate }}</td>
+                                <td class='last-td'>$ {% money bonus.bonusvalue %}</td>
+                              </tr>
+          {% define year as year_prev %}
+     {% endfor %}
+                   </tbody>
+                 </table>
+                </div>
+              </td>
+            </tr>
+          </div>
+        </tbody>
+      </table>
+  </div>
+</div>
+
+{% endblock %}

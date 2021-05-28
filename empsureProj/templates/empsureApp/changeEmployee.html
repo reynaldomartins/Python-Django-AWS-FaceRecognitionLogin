@@ -1,0 +1,101 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+
+{% block body_block %}
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#key-employee {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#list-employees {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#list-employees li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#list-employees li a:hover:not(.header) {
+  background-color: #eee;
+}
+
+.selected {
+  background-color: blue;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Select a Employee</h2>
+
+  <form class="" action="{% url 'empsureApp:changeEmployeeURLName' %}" method="post">
+
+      {% csrf_token %}
+
+      <input type="text" id="key-employee" name="key-employee" onkeyup="myFunction()">
+
+      <ul id="list-employees" name="list-employees">
+        {% for employee in listEmployees %}
+          <li data-value={{employee.idemployee}}><a href="#">#{{ employee.idemployee }} - {{ employee.firstname }} {{ employee.lastname }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <br>
+
+      <input type="submit" class="btn btn-primary" name="" value="Select Employee">
+  </form>
+</div>
+
+<script>
+
+$("#list-employees li").click(function () {
+      $("#list-employees li").removeClass('selected');
+      $(this).addClass('selected');
+      $("#key-employee").val($(this).text());
+      myFunction();
+});
+
+function myFunction() {
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("key-employee");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("list-employees");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+
+</script>
+
+{% endblock %}

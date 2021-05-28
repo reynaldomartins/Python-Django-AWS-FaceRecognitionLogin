@@ -1,0 +1,120 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+{% load tags %}
+
+{% block body_block %}
+
+<div class="container">
+     {% define 0 as year_prev %}
+     <h3>Vacation History - Employee : {{ subjectEmployee.firstname }} {{ subjectEmployee.lastname }}</h3>
+     <br>
+     <div class="row main-row">
+         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+             <h3>Vacation Days</h3>
+             <div class="div-list-info table-responsive">
+                {% for grant in listVacationsGrants %}
+                    {% define grant.year as year %}
+                    {% if year != year_prev %}
+                        {% if year_prev != 0 %}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </div>
+                              </tbody>
+                            </table>
+                        {% endif %}
+                        <table class="hoverTable">
+                          <tbody class="hoverTableBody">
+                            <tr class="collapsable-table-row">
+                              <td width="350" style="text-decoration: underline;">
+                                Days Grant for the year :
+                                <span class="strong-enhance">{{ year }}</span>
+                              </td>
+                              <td>
+                                <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                              </td>
+                            </tr>
+                          <div>
+                          <tr class="collapsed-table-row">
+                            <td>
+                             <div class="collapsed-table-div">
+                               <table>
+                                 <thead>
+                                   <th>Quantity Days</th>
+                                 </thead>
+                                 <tbody>
+                      {% endif %}
+                                      <tr>
+                                        <td class='last-td'>{{ grant.qtydays }}</td>
+                                      </tr>
+                  {% define year as year_prev %}
+             {% endfor %}
+                           </tbody>
+                         </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </div>
+                </tbody>
+              </table>
+             </div>
+           </div>
+           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+             <h3>Vacation Dates</h3>
+             <div class="div-list-info table-responsive">
+                {% for date in listVacationsDates %}
+                    {% define date.datevacation.year as year %}
+                    {% if year != year_prev %}
+                        {% if year_prev != 0 %}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </div>
+                              </tbody>
+                            </table>
+                        {% endif %}
+                        <table class="hoverTable">
+                          <tbody class="hoverTableBody">
+                            <tr class="collapsable-table-row">
+                              <td width="400" style="text-decoration: underline;">
+                                Dates off on Vacation during the year :
+                                <span class="strong-enhance">{{ year }}</span>
+                              </td>
+                              <td>
+                                <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                              </td>
+                            </tr>
+                          <div>
+                          <tr class="collapsed-table-row">
+                            <td>
+                             <div class="collapsed-table-div">
+                               <table>
+                                 <thead>
+                                   <th>Vacation Date</th>
+                                   <th>Status</th>
+                                 </thead>
+                                 <tbody>
+                      {% endif %}
+                                      <tr>
+                                        <td class='not-last-td'>{{ date.datevacation }}</td>
+                                        <td class='last-td'>{{ date.status }}</td>
+                                      </tr>
+                  {% define year as year_prev %}
+             {% endfor %}
+                           </tbody>
+                         </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </div>
+                </tbody>
+              </table>
+          </div>
+</div>
+
+{% endblock %}

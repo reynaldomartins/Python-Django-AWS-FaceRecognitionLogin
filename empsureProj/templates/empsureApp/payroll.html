@@ -1,0 +1,93 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+{% load tags %}
+
+{% block body_block %}
+
+<div class="container">
+     {% define 0 as year_prev %}
+     <h3>Payroll History - Employee : {{ subjectEmployee.firstname }} {{ subjectEmployee.lastname }}</h3>
+     <br>
+     <div class="row main-row">
+         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+             <h3>Wage History</h3>
+             <div class="div-list-info table-responsive">
+               <table>
+                   <thead>
+                     <th>Initial Date</th>
+                     <th>Final Date</th>
+                     <th>Hourly Wage</th>
+                   </thead>
+                   <tbody>
+                     {% for wage in listWages %}
+                        <tr>
+                          <td class='not-last-td'>{{ wage.initialdate }}</td>
+                          <td class='not-last-td'>{{ wage.finaldate }}</td>
+                          <td class='not-last'>$ {% money wage.wagevalue %}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+             </div>
+           </div>
+           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+             <h3>Payments</h3>
+             <div class="div-list-info table-responsive">
+                {% for payment in listPayments %}
+                    {% define payment.paymentdate.year as year %}
+                    {% if year != year_prev %}
+                        {% if year_prev != 0 %}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </div>
+                              </tbody>
+                            </table>
+                        {% endif %}
+                        <table class="hoverTable">
+                          <tbody class="hoverTableBody">
+                            <tr class="collapsable-table-row">
+                              <td width="450" style="text-decoration: underline;">
+                                Payments during the year :
+                                <span class="strong-enhance">{{ year }}</span>
+                              </td>
+                              <td>
+                                <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                              </td>
+                            </tr>
+                          <div>
+                          <tr class="collapsed-table-row">
+                            <td>
+                             <div class="collapsed-table-div">
+                               <table>
+                                 <thead>
+                                   <th>Payment Date</th>
+                                   <th>Gross</th>
+                                   <th>Discounts</th>
+                                   <th>Net Payment</th>
+                                 </thead>
+                                 <tbody>
+                      {% endif %}
+                                      <tr>
+                                        <td class='not-last-td'>{{ payment.paymentdate }}</td>
+                                        <td class='not-last-td'>$ {% money payment.grosspayment %}</td>
+                                        <td class='not-last-td'>$ {% money payment.discounts %}</td>
+                                        <td class='last-td'>$ {% subtract payment.grosspayment payment.discounts %}</td>
+                                      </tr>
+                  {% define year as year_prev %}
+             {% endfor %}
+                           </tbody>
+                         </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </div>
+                </tbody>
+              </table>
+          </div>
+</div>
+
+{% endblock %}

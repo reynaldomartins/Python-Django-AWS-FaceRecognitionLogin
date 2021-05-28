@@ -1,0 +1,138 @@
+<!--users/templates/registration/login.html-->
+
+{% extends 'empsureApp/base.html' %}
+{% load widget_tweaks %}
+
+{% block body_block %}
+
+<div class="container" style="width: 80%;
+  text-align: center;">
+  <h3>Sign In</h3>
+  <br>
+
+  <div class="row">
+      <video id="video" autoplay style="display:none"></video>
+      <canvas id="videocanvas"></canvas>
+      <canvas id="canvas" style="display: none"></canvas>
+  </div>
+  <br>
+  <button onclick="takepicture()" class="btn btn-secondary" id="takePictureButton" >Take a Photo</button>
+  <br>
+
+  <form method="post" action="{% url 'empsureApp:loginURLName' %}">
+
+      {% csrf_token %}
+
+      <input type="hidden" for="image_data" id="id_image_data" name="image_data"/>
+
+      {% if form.errors %}
+        {% if form.image_data.errors %}
+          <span class="strong-enhance">{{ form.image_data.errors | striptags }}</span>
+          <br>
+        {% endif %}
+        {% if form.non_field_errors %}
+          <span class="strong-enhance">{{ form.non_field_errors | striptags }}</span>
+          <br>
+        {% endif %}
+        <br>
+      {% endif %}
+
+      <div class="fieldWrapper">
+          {{ form.username.errors }}
+          <label class="field-label left-label" for="{{ form.username.id_for_label }}">Username:</label>
+          {{ form.username | add_class:'field-box field-box-small' }}
+          <br>
+      </div>
+      <div class="fieldWrapper">
+          {{ form.password.errors }}
+          <label class="field-label left-label" for="{{ form.password.id_for_label }}">Password:</label>
+          {{ form.password | add_class:'field-box field-box-small' }}
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary">Login</button>
+
+  </form>
+</div>
+
+<script type="text/javascript">
+
+window.onload = function() {
+
+    var width = 400;
+    var height = 0;
+    var streaming = false;
+    var video = null;
+    var canvas = null;
+    var videocanvas = null;
+    var takePictureButton = null;
+
+    setInterval(showVideoCanvas, 50);
+
+    video = document.getElementById('video');
+    video.viderWidth = width;
+    video.videoHeight = height;
+    canvas = document.getElementById('canvas');
+    videocanvas = document.getElementById('videocanvas');
+    image_data = document.getElementById('id_image_data');
+    takePictureButton = document.getElementById('takePictureButton');
+
+    navigator.mediaDevices.getUserMedia({video: true, audio: false})
+    .then(function(stream) {
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch(function(err) {
+      console.log("An error occurred: " + err);
+    });
+
+    video.addEventListener('canplay', function(ev){
+      if (!streaming) {
+        height = video.videoHeight / (video.videoWidth/width);
+
+        video.setAttribute('width', width);
+        video.setAttribute('height', height);
+        canvas.setAttribute('width', width);
+        canvas.setAttribute('height', height);
+        videocanvas.setAttribute('width', width);
+        videocanvas.setAttribute('height', height);
+        streaming = true;
+      }
+    }, false);
+
+    takePictureButton.addEventListener('click', function(ev){
+      takepicture();
+      ev.preventDefault();
+    }, false);
+
+  function showVideoCanvas() {
+    var context = videocanvas.getContext('2d');
+    if (width && height) {
+      videocanvas.width = width;
+      videocanvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
+
+      context.beginPath();
+      context.strokeStyle = "blue";
+      context.rect(100, 60, 200, 180);
+      context.stroke();
+    }
+  }
+
+  function takepicture() {
+    var context = canvas.getContext('2d');
+    canvas.style.display = 'inline';
+    if (width && height) {
+      canvas.width = 200;
+      canvas.height = 180;
+      context.drawImage(videocanvas,100,60,200,180,0,0,200,180);
+
+      var data = canvas.toDataURL('image/png');
+      image_data.setAttribute('value', data);
+    }
+  }
+};
+
+</script>
+
+
+{% endblock %}

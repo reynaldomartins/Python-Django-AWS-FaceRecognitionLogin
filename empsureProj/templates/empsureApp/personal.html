@@ -1,0 +1,76 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+
+{% block body_block %}
+{% load widget_tweaks %}
+
+  <div class="container div-form">
+
+    <h3>Edit Employee Personal Data - {{employee.lastname}}, {{employee.firstname}}</h3>
+    <br>
+
+    <form class="" action="{% url 'empsureApp:personalURLName' %}?employee={{employee.idemployee}}" method="POST" enctype="multipart/form-data">
+
+      <div hidden>
+          {{ personal_form.contractinitialdate }}
+          {{ personal_form.contractfinaldate }}
+      </div>
+
+      {% csrf_token %}
+
+      <div class="container">
+
+        <div class="row">
+
+        <div class="col-lg-4 col-sm-4 boxy">
+            <div class="fieldWrapper inline-element">
+                <label class="field-label top-label" for="{{ personal_form.firstname.id_for_label }}">First Name</label>
+                {{ personal_form.firstname | add_class:'field-box field-box-large'}}
+            </div>
+
+            <div class="fieldWrapper inline-element">
+                <label class="field-label top-label" for="{{ personal_form.lastname.id_for_label }}">Last Name</label>
+                {{ personal_form.lastname | add_class:'field-box field-box-large'}}
+            </div>
+
+            <div class="fieldWrapper">
+                <label class="field-label top-label" for="{{ personal_form.birthdate.id_for_label }}">Birth Date</label>
+                <span class="glyphicon glyphicon-calendar"></span>
+                {{ personal_form.birthdate | add_class:'field-box' }}&nbsp;&nbsp;
+            </div>
+        </div>
+
+        <div class="row container">
+
+          <div class="col-lg-12 col-sm-12 boxy">
+
+            {% if personal_form.errors %}
+              <br>
+              <span class="form-error">
+                {{ personal_form.non_field_errors | striptags }}
+                {{ personal_form.firstname.errors | striptags }}
+                {{ personal_form.birthdate.errors | striptags }}
+              </span>
+              <br>
+            {% endif %}
+
+            <br><br>
+            <button type="submit" class="cancel-button btn btn" name="cancel"
+                  data-href="{% url 'empsureApp:personalURLName' %}" >Cancel</button>
+            {% if isHR %}
+              <input type="submit" name="update" class="btn btn-primary" value="Update Personal Data"></input>
+            {% endif %}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+{% endblock %}

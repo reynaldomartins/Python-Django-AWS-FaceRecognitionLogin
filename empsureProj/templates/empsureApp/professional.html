@@ -1,0 +1,73 @@
+{% extends 'empsureApp/base.html' %}
+<!-- add here include for staticfiles when ready -->
+{% load static %}
+
+{% block body_block %}
+{% load widget_tweaks %}
+
+<div class="container div-form">
+
+  <h3>Edit Employee Pofessional Data - {{employee.lastname}}, {{employee.firstname}}</h3>
+  <br>
+
+  <form class="" action="{% url 'empsureApp:professionalURLName' %}?employee={{employee.idemployee}}" method="POST" enctype="multipart/form-data">
+
+    <div hidden>
+        {{ professional_form.firstname }}
+        {{ professional_form.lastname }}
+        {{ professional_form.birthdate }}
+    </div>
+
+    {% csrf_token %}
+
+    <div class="container">
+
+      <div class="row">
+
+      <div class="col-lg-4 col-sm-4 boxy">
+
+          <div class="fieldWrapper inline-element">
+              <label class="field-label top-label" for="{{ professional_form.contractinitialdate.id_for_label }}">Contract Initial Date</label>
+              <span class="glyphicon glyphicon-calendar"></span>
+              {{ professional_form.contractinitialdate | add_class:'field-box' }}&nbsp;&nbsp;
+          </div>
+
+          <div class="fieldWrapper inline-element">
+              <label class="field-label top-label" for="{{ professional_form.contractfinaldate.id_for_label }}">Contract Final Date</label>
+              <span class="glyphicon glyphicon-calendar"></span>
+              {{ professional_form.contractfinaldate | add_class:'field-box' }}&nbsp;&nbsp;
+          </div>
+
+      </div>
+
+      <div class="row container">
+
+        <div class="col-lg-12 col-sm-12 boxy">
+
+          {% if professional_form.errors %}
+            <br>
+            <span class="form-error">
+              {{ professional_form.non_field_errors | striptags }}
+              {{ professional_form.contractinitialdate.errors | striptags }}
+            </span>
+            <br>
+          {% endif %}
+
+          <br><br>
+          <button type="submit" class="cancel-button btn btn" name="cancel"
+                data-href="{% url 'empsureApp:professionalURLName' %}" >Cancel</button>
+          {% if isHR %}
+            <input type="submit" name="update" class="btn btn-primary" value="Update Professional Data"></input>
+          {% endif %}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

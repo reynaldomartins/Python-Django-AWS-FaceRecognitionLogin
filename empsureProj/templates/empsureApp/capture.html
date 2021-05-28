@@ -1,0 +1,163 @@
+{% extends 'empsureApp/base.html' %}
+
+{% block body_block %}
+
+<div class="container div-form">
+<div class="container image-area">
+<h3>Capture Faces for Login Authorization</h3>
+<h4>Face inside the square, looking to the camera. No glasses, no caps</h4>
+<h4></h4>
+<br>
+<div class="container">
+
+  <div class="row">
+      <video id="video" autoplay style="display:none"></video>
+      <canvas id="videocanvas"></canvas>
+  </div>
+
+  <form method="post" action="{% url 'empsureApp:captureURLName' %}">
+
+      {% csrf_token %}
+
+      <input type="hidden" for="capture_image0" id="id_capture_image0" name="capture_image0"/>
+      <input type="hidden" for="capture_image1" id="id_capture_image1" name="capture_image1"/>
+      <input type="hidden" for="capture_image2" id="id_capture_image2" name="capture_image2"/>
+      <input type="hidden" for="capture_image3" id="id_capture_image3" name="capture_image3"/>
+      <input type="hidden" for="capture_image4" id="id_capture_image4" name="capture_image4"/>
+
+      {{ form.capture_image0.errors }}
+      {{ form.capture_image1.errors }}
+      {{ form.capture_image2.errors }}
+      {{ form.capture_image3.errors }}
+      {{ form.capture_image4.errors }}
+
+      {{ form.non_field_errors }}
+      <button class="btn btn-primary" id="takePictureButton" >Take Photo Series</button>
+      <button class="btn btn-success" type="submit" id="id_submit">Submit Faces</button>
+  </form>
+  <br>
+  <div class="row">
+      <canvas id="canvas0" style="display: none"></canvas>
+      <canvas id="canvas1" style="display: none"></canvas>
+      <canvas id="canvas2" style="display: none"></canvas>
+      <canvas id="canvas3" style="display: none"></canvas>
+      <canvas id="canvas4" style="display: none"></canvas>
+
+  </div>
+
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+
+window.onload = function() {
+
+  var total_capture = 5;
+  var width = 400;
+  var height = 0;
+  var streaming = false;
+  var video = null;
+  var videocanvas = null;
+  var canvas = [];
+  var capture_image = [];
+  var takePictureButton = null;
+  var submitButton = null;
+  var i_capture = 0;
+  var capture_interval;
+
+  video = document.getElementById('video');
+  video.viderWidth = width;
+  video.videoHeight = height;
+
+  for (var i=0; i < total_capture; i++) {
+    canvasid = "canvas";
+    canvasid = canvasid.concat(i.toString());
+    canvas[i] = document.getElementById(canvasid);
+    captureid = "id_capture_image"
+    captureid = captureid.concat(i.toString());
+    capture_image[i] = document.getElementById(captureid);
+  }
+  videocanvas = document.getElementById('videocanvas');
+  takePictureButton = document.getElementById('takePictureButton');
+
+  submitButton = document.getElementById('id_submit');
+  submitButton.setAttribute("disabled",true);
+
+  setInterval(showVideoCanvas, 50);
+
+  navigator.mediaDevices.getUserMedia({video: true, audio: false})
+  .then(function(stream) {
+    video.srcObject = stream;
+    video.play();
+  })
+  .catch(function(err) {
+    console.log("An error occurred: " + err);
+  });
+
+  video.addEventListener('canplay', function(ev){
+    if (!streaming) {
+      height = video.videoHeight / (video.videoWidth/width);
+
+      video.setAttribute('width', width);
+      video.setAttribute('height', height);
+      for (var i=0; i < total_capture; i++) {
+        canvas[i].setAttribute('width', width);
+        canvas[i].setAttribute('height', height);
+    }
+    videocanvas.setAttribute('width', width);
+    videocanvas.setAttribute('height', height);
+    streaming = true;
+    }
+  }, false);
+
+  takePictureButton.addEventListener('click', function(ev){
+    takemanypictures();
+    ev.preventDefault();
+  }, false);
+
+  function showVideoCanvas() {
+    var context = videocanvas.getContext('2d');
+    if (width && height) {
+      videocanvas.width = width;
+      videocanvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
+
+      context.beginPath();
+      context.strokeStyle = "blue";
+      context.rect(100, 60, 200, 180);
+      context.stroke();
+    }
+  }
+
+  function takemanypictures() {
+    capture_interval = setInterval(takepicture, 500);
+  }
+
+  function takepicture() {
+      if (i_capture == total_capture) {
+          i_capture = 0;
+          window.clearInterval(capture_interval);
+          submitButton.removeAttribute("disabled");
+      } else {
+        submitButton.setAttribute("disabled",true);
+        var context = canvas[i_capture].getContext('2d');
+        canvas[i_capture].style.display = 'inline';
+        if (width && height) {
+          canvas[i_capture].width = 200;
+          canvas[i_capture].height = 180;
+          context.drawImage(videocanvas,100,60,200,180,0,0,200,180);
+
+          var data = canvas[i_capture].toDataURL('image/png');
+          capture_image[i_capture].setAttribute('value', data);
+          i_capture++;
+        }
+      }
+  }
+
+};
+
+</script>
+
+
+{% endblock %}
